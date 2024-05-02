@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.regex.Pattern;
 
 
 /**
@@ -76,6 +77,18 @@ public class DataTableController  {
             return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
         }
 
+        // 定义分页参数校验的正则表达式
+        String pageSizeRegex = "^([1-9]\\d{0,2}|3000)$"; // pageSize小于等于3000
+        String pageRegex = "^\\d+$"; // page为非负整数
+
+        // 校验分页参数
+        if (!Pattern.matches(pageSizeRegex, String.valueOf(pageSize))) {
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR, "pageSize过大或格式错误");
+        }
+        if (!Pattern.matches(pageRegex, String.valueOf(page))) {
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR, "page参数过小或格式错误");
+        }
+
         return dataTableService.getPageTableDataById(id, page, pageSize,request);
     }
 
@@ -91,6 +104,7 @@ public class DataTableController  {
     public BaseResponse getAllTable(HttpServletRequest request) {
         return dataTableService.getTable(request);
     }
+
 
 
 

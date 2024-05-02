@@ -66,6 +66,9 @@ public class DataTableServiceImpl extends ServiceImpl<DataTableMapper, DataTable
 
         log.info("\t\t> 服务器成功接受Excel文件，开始解析");
 
+//        从请求头中获取用户id
+        Long uid = Processing.getAuthHeaderToUserId(request);
+
 //        检测Excel数据表是否重名
         if (dataTableDAO.isExistDataTableByName(name)) {
             return ResultUtil.error(ErrorCode.DATA_TABLE_EXIST);
@@ -158,6 +161,13 @@ public class DataTableServiceImpl extends ServiceImpl<DataTableMapper, DataTable
             log.info("\t\t> 正在向Excel数据表【{}】插入了{}条数据",dataTable.getName(),filedDataList.size());
         }
 
+        Record record = new Record();
+        record.setType("插入")
+                .setContent("用户"+userDAO.getUserNameById(uid)+"创建了数据表" +
+                        dataTable.getName())
+                .setIp(IpUtils.getIpAddr(request))
+                .setUserId(uid);
+        recordMapper.insert(record);
 
         return ResultUtil.success();
     }
@@ -202,7 +212,8 @@ public class DataTableServiceImpl extends ServiceImpl<DataTableMapper, DataTable
         record.setType("查询")
                 .setContent("用户"+userDAO.getUserNameById(uid)+"查询了数据表" +
                         dataTableVO.getName()+"的所有数据")
-                .setIp(IpUtils.getIpAddr(request));
+                .setIp(IpUtils.getIpAddr(request))
+                .setUserId(uid);
         recordMapper.insert(record);
 
         return ResultUtil.success(dataTableVO);
@@ -210,7 +221,7 @@ public class DataTableServiceImpl extends ServiceImpl<DataTableMapper, DataTable
 
 
     /**
-     * 分页 根据id获取数据信息
+     * 分页 根据id获取数据表数据信息
      *
      * @param id 数据表id
      * @param request  请求
@@ -230,11 +241,14 @@ public class DataTableServiceImpl extends ServiceImpl<DataTableMapper, DataTable
             return ResultUtil.error(ErrorCode.TABLE_DATA_NOT_EXIST);
         }
 
+//        获取数据表和其所属的列信息
         DataTable dataTable = dataTableMapper.selectById(id);
         List<Filed> filedIdList = filedDAO.getFiledListByTableId(id);
 
+//        分页获取数据表的数据
         List<FiledDataVO> filedDataVOS = new ArrayList<>();
         for (Filed filed : filedIdList) {
+//            获取每个列数据，并封装VO类
             FiledDataVO filedDataVO = new FiledDataVO();
             Processing.copyProperties(filed, filedDataVO);
             filedDataVO.setExcelData(filedDataDAO.getPageFiledDataByFiledId(filed.getId(),page,pageSize));
@@ -242,15 +256,19 @@ public class DataTableServiceImpl extends ServiceImpl<DataTableMapper, DataTable
             log.info("\t\t> 获取第{}页{}条到了名为【{}】的数据表中列名为【{}】的数据",
                     page,pageSize, dataTable.getName(),filedDataVO.getName());
         }
+//        封装数据表VO类
         DataTableVO dataTableVO = new DataTableVO();
         Processing.copyProperties(dataTable,dataTableVO);
         dataTableVO.setFileds(filedDataVOS);
 
+
+//        增加记录
         Record record = new Record();
         record.setType("查询")
                 .setContent("用户"+userDAO.getUserNameById(uid)+"查询了数据表" +
                         dataTableVO.getName()+"的第"+page+"页"+pageSize+"条的数据")
-                .setIp(IpUtils.getIpAddr(request));
+                .setIp(IpUtils.getIpAddr(request))
+                .setUserId(uid);
         recordMapper.insert(record);
 
         return ResultUtil.success(dataTableVO);
@@ -267,16 +285,20 @@ public class DataTableServiceImpl extends ServiceImpl<DataTableMapper, DataTable
     @Override
     public BaseResponse getTable(HttpServletRequest request) {
 
+//        获取用户id
         Long uid = Processing.getAuthHeaderToUserId(request);
 
+//        获取所有数据表信息
         List<DataTable> dataTableList = dataTableMapper.selectList(null);
 
+//        封装数据表实体类
         List<DataTableVO> dataTableVOS = dataTableList.stream().map(dataTable -> {
             DataTableVO dataTableVO = new DataTableVO();
             Processing.copyProperties(dataTable, dataTableVO);
             return dataTableVO;
                 }).collect(Collectors.toList());
 
+//        获取每个数据表下的列信息
         for (DataTableVO dataTableVO : dataTableVOS) {
             List<Filed> filedIdList = filedDAO.getFiledListByTableId(dataTableVO.getId());
             List<FiledDataVO> filedDataVOS = new ArrayList<>();
@@ -288,10 +310,12 @@ public class DataTableServiceImpl extends ServiceImpl<DataTableMapper, DataTable
             dataTableVO.setFileds(filedDataVOS);
         }
 
+//        增加记录
         Record record = new Record();
         record.setType("查询")
                 .setContent("用户"+userDAO.getUserNameById(uid)+"查询了所有数据表信息")
-                .setIp(IpUtils.getIpAddr(request));
+                .setIp(IpUtils.getIpAddr(request))
+                .setUserId(uid);
         recordMapper.insert(record);
 
         return ResultUtil.success(dataTableVOS);

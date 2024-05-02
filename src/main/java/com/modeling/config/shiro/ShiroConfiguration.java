@@ -94,6 +94,7 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/unauthorized", "anon");
         filterChainDefinitionMap.put("/", "anon");
         filterChainDefinitionMap.put("/excelData/**","authc, anon");
+        filterChainDefinitionMap.put("/filed/**","authc, anon");
 
         return filterChainDefinitionMap;
     }

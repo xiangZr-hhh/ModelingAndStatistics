@@ -52,7 +52,9 @@ public enum ErrorCode {
     EXCEL_SHEET_HEADER_INCONSISTENT("ExcelSheetHeaderInconsistent", 60007, "Excel表头错误"),
     EXCEL_SHEET_DATA_FORMAT_ERROR("ExcelSheetDataFormatError", 60008, "Excel数据格式错误"),
     EXCEL_DATA_NULL("ExcelDataNull", 60009,"Excel数据内容为空"),
-    TABLE_DATA_NOT_EXIST("TableDataNotExist",60010,"数据表不存在");
+    TABLE_DATA_NOT_EXIST("TableDataNotExist",60010,"数据表不存在"),
+    FILED_NOT_EXIST("FiledNotExist",60011 ,"列名不存在"),
+    FILED_TYPE_NOT_TRUE("FiledTypeNotTrue",60012 ,"列类型不一致" );
 
 
     private final String output;
