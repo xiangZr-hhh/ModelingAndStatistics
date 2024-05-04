@@ -48,6 +48,30 @@ public class DataTableController  {
 
 
     /**
+     * 向指定数据表中增加Excel文件里的数据
+     *
+     * @param files Excel文件
+     * @param id 数据表id
+     * @param request 请求
+     * @return com.modeling.utils.BaseResponse
+     * @author zrx
+     **/
+
+    @PostMapping("increaseDataToTable")
+    public BaseResponse increaseDataToTable (@RequestParam("files") MultipartFile[] files,
+                                             @RequestParam("id") Long id,
+                                             HttpServletRequest request) {
+
+        if (id == null || files == null) {
+            return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
+        }
+
+        return dataTableService.increaseDataTable(files, id, request);
+    }
+
+
+
+    /**
      *  获取数据表内全部信息
      *
      * @param id 数据表id
@@ -68,6 +92,16 @@ public class DataTableController  {
 
 
 
+    /**
+     * 分页获取指定id的数据表
+     *
+     * @param id 数据表id
+     * @param page 当前页数
+     * @param pageSize 每页大小
+     * @param request  请求
+     * @return com.modeling.utils.BaseResponse
+     * @author zrx
+     **/
     @GetMapping("getPageDataTableById")
     public BaseResponse getPageDataTableById (@RequestParam Long id,
                                               @RequestParam Integer page,
@@ -105,6 +139,49 @@ public class DataTableController  {
         return dataTableService.getTable(request);
     }
 
+
+
+    /**
+     *  删除一个数据表
+     *
+     * @param id 数据表id
+     * @param request  请求
+     * @return com.modeling.utils.BaseResponse
+     * @author zrx
+     **/
+   @DeleteMapping("deleteDataTable")
+   public BaseResponse deleteDataTable(@RequestParam Long id,
+                                        HttpServletRequest request) {
+
+       if (id == null) {
+           return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
+       }
+
+       return dataTableService.deleteDataTable(id, request);
+   }
+
+
+
+
+   /**
+    * 更新指定数据表的字段数据（会删除原有数据）
+    *
+    * @param id 数据表id
+    * @param request  请求
+    * @return com.modeling.utils.BaseResponse
+    * @author zrx
+    **/
+   @PutMapping("updateDataTable")
+   public BaseResponse updateDataTable(@RequestParam("files") MultipartFile[] files,
+                                       @RequestParam("id") Long id,
+                                       HttpServletRequest request) {
+
+       if (id == null || files == null) {
+           return ResultUtil.error(ErrorCode.PARAMETER_ERROR);
+       }
+
+       return dataTableService.updataDataTable(id,files, request);
+   }
 
 
 

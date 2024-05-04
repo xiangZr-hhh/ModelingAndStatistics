@@ -602,42 +602,56 @@
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
+                    <option name="comment" value="名称" />
                     <option name="custom" value="false" />
                     <option name="ext" value="{}" />
                     <option name="name" value="name" />
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
+                    <option name="comment" value="备注" />
                     <option name="custom" value="false" />
                     <option name="ext" value="{}" />
                     <option name="name" value="remark" />
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
+                    <option name="comment" value="列总数" />
                     <option name="custom" value="false" />
                     <option name="ext" value="{}" />
                     <option name="name" value="filedTotal" />
                     <option name="type" value="java.lang.Integer" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
+                    <option name="comment" value="数据总行数" />
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="dataTotal" />
+                    <option name="type" value="java.lang.Integer" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="创建者" />
                     <option name="custom" value="false" />
                     <option name="ext" value="{}" />
                     <option name="name" value="createdBy" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
+                    <option name="comment" value="创建时间" />
                     <option name="custom" value="false" />
                     <option name="ext" value="{}" />
                     <option name="name" value="createdTime" />
                     <option name="type" value="java.util.Date" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
+                    <option name="comment" value="更新者" />
                     <option name="custom" value="false" />
                     <option name="ext" value="{}" />
                     <option name="name" value="updatedBy" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
+                    <option name="comment" value="更新时间" />
                     <option name="custom" value="false" />
                     <option name="ext" value="{}" />
                     <option name="name" value="updatedTime" />
@@ -748,6 +762,12 @@
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="filedDataSize" />
+                    <option name="type" value="java.lang.Integer" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
                     <option name="comment" value="所属数据表id" />
                     <option name="custom" value="false" />
                     <option name="ext" value="{}" />
@@ -767,7 +787,7 @@
               <option name="saveModelName" value="ModelingAndStatistics" />
               <option name="savePackageName" value="com.modeling" />
               <option name="savePath" value="./src/main/java/com/modeling" />
-              <option name="templateGroupName" value="" />
+              <option name="templateGroupName" value="MybatisPlus" />
             </TableInfoDTO>
           </value>
         </entry>

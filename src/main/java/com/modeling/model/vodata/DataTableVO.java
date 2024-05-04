@@ -25,6 +25,8 @@ public class DataTableVO {
 
     private Integer filedTotal;
 
+    private Integer dataTotal;
+
     private List<FiledDataVO> fileds;
 
     private Long createdBy;

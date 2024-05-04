@@ -4,6 +4,8 @@ import com.modeling.model.vodata.UserLoginVO;
 import com.modeling.model.vodata.UserRegisterVO;
 import com.modeling.utils.BaseResponse;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 描述：用户登录服务层接口
  *
@@ -14,4 +16,6 @@ public interface AuthService {
     BaseResponse authLogin(UserLoginVO userLoginVO);
 
     BaseResponse authRegister(UserRegisterVO userRegisterVO);
+
+    BaseResponse authLogout(HttpServletRequest request);
 }

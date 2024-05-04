@@ -78,7 +78,7 @@ public class FiledServiceImpl extends ServiceImpl<FiledMapper, Filed> implements
                 return ResultUtil.error(ErrorCode.FILED_NOT_EXIST);
             }
 
-            DataTable dataTable = dataTableMapper.selectById(filed.getId());
+            DataTable dataTable = dataTableMapper.selectById(filed.getTableId());
             List<String> filedData;
             filedData = filedDataDAO.getFiledDataByFiledId(filed.getId());
             allFiledData.addAll(filedData);

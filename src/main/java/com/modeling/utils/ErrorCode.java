@@ -54,7 +54,8 @@ public enum ErrorCode {
     EXCEL_DATA_NULL("ExcelDataNull", 60009,"Excel数据内容为空"),
     TABLE_DATA_NOT_EXIST("TableDataNotExist",60010,"数据表不存在"),
     FILED_NOT_EXIST("FiledNotExist",60011 ,"列名不存在"),
-    FILED_TYPE_NOT_TRUE("FiledTypeNotTrue",60012 ,"列类型不一致" );
+    FILED_TYPE_NOT_TRUE("FiledTypeNotTrue",60012 ,"列类型不一致" ),
+    DATA_TABLE_NOT_EXIST("DataTableNotExist", 60013, "Excel数据表不存在存在");
 
 
     private final String output;

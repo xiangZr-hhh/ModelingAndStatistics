@@ -38,7 +38,7 @@ public class FiledController  {
      * @author zrx
      **/
     @GetMapping("getDataByFiledIdList")
-    public BaseResponse getDataByFiledIdList(List<Long> filedIds,
+    public BaseResponse getDataByFiledIdList(@RequestParam List<Long> filedIds,
             HttpServletRequest request) {
 
 //        检测filedIds是否为空

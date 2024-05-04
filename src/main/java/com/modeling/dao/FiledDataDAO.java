@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.modeling.mapper.FiledDataMapper;
+import com.modeling.model.entity.Filed;
 import com.modeling.model.entity.FiledData;
 import com.modeling.model.vodata.FiledDataVO;
 import com.modeling.utils.BaseResponse;
@@ -79,6 +80,25 @@ public class FiledDataDAO {
 
         return stringData;
     }
+
+
+    /**
+     * 根据列id删除对应数据
+     *
+     * @param id  列id
+     * @return void
+     * @author zrx
+     **/
+    public void deleteExcelDataByFiledId (Long id) {
+        filedDataWrapper.clear();
+        filedDataWrapper.eq(FiledData::getFiledId,id);
+        filedDataMapper.delete(filedDataWrapper);
+    }
+
+
+
+
+
 
 
 }

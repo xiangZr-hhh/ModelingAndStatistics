@@ -27,5 +27,11 @@ public interface DataTableService extends IService<DataTable> {
                                       Integer page,
                                       Integer pageSize,
                                       HttpServletRequest request);
+
+    BaseResponse deleteDataTable(Long id, HttpServletRequest request);
+
+    BaseResponse increaseDataTable(MultipartFile[] files, Long id, HttpServletRequest request);
+
+    BaseResponse updataDataTable(Long id,MultipartFile[] files, HttpServletRequest request);
 }
 

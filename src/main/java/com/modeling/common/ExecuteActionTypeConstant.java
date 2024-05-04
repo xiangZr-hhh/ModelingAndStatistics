@@ -8,6 +8,10 @@ package com.modeling.common;
 public class ExecuteActionTypeConstant {
 
     public static String ADD = "add";
+
+    public static String INCREASE = "increase";
+
+    public static String UPDATE = "update";
 }
 
 

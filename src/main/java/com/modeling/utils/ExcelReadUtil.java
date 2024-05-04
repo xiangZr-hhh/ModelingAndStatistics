@@ -3,6 +3,7 @@ package com.modeling.utils;
 import com.csvreader.CsvReader;
 import com.modeling.exception.BusinessException;
 
+import com.modeling.model.entity.Filed;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
@@ -108,10 +109,12 @@ public class ExcelReadUtil {
      * 检查Excel表头是否正确
      *
      * @param files 文件
+     * @param headerName 要校验的表头，没有填null
      * @return com.modeling.utils.BaseResponse
      * @author zrx
      **/
-    public static BaseResponse checkExcelSheetHeader(MultipartFile[] files) {
+    public static BaseResponse checkExcelSheetHeader(MultipartFile[] files ,
+                                                        List<String> headerName) {
 
 //        定义储存所有表头的数组
         List<List<String>> allHeader = new ArrayList<>();
@@ -148,7 +151,15 @@ public class ExcelReadUtil {
             return ResultUtil.error(ErrorCode.EXCEL_SHEET_HEADER_CONTENT_NULL);
         }
 //      遍历所有表头,查看是否所有表头数据相同
-        List<String> checkHeader = allHeader.get(0);
+
+        //判断下是否有表头校验参数，没有则按文件读取的第一行处理
+        List<String> checkHeader = new ArrayList<>();
+        if (headerName == null) {
+            checkHeader = allHeader.get(0);
+        } else {
+            checkHeader = headerName;
+        }
+
         for (int i = 0; i < allHeader.size(); i++) {
             List<String> currentHeader = allHeader.get(i);
             if (!checkHeader.equals(currentHeader)) {
@@ -163,6 +174,7 @@ public class ExcelReadUtil {
     }
 
 
+
     /**
      * 检验Excel表格的数据格式
      *
@@ -171,7 +183,9 @@ public class ExcelReadUtil {
      * @return com.modeling.utils.BaseResponse
      * @author zrx
      **/
-    public static BaseResponse checkExcelSheetData(MultipartFile[] files, List<String> sheetHeader) {
+    public static BaseResponse checkExcelSheetData(MultipartFile[] files,
+                                                   List<String> sheetHeader,
+                                                   List<Filed> filedList) {
         // 定义存放错误信息的数组
         List<String> errorMessages = new ArrayList<>();
         // 定义储存文件列名类型的数组
@@ -214,7 +228,12 @@ public class ExcelReadUtil {
             return ResultUtil.error(ErrorCode.EXCEL_DATA_NULL);
         }
 
-        // 检验数据格式,检验每个列下的数据内容是否相同
+        List<String> checkType = new ArrayList<>();
+        if (filedList != null) {
+            checkType = filedList.stream().
+                    map(filed -> filed.getType()).collect(Collectors.toList());
+        }
+      // 检验数据格式,检验每个列下的数据内容是否相同
         for (int i = 0; i < sheetHeader.size(); i++) {
             String columnHeader = sheetHeader.get(i);
             List<String> columnData = getColumnData(allSheetData, i);
@@ -222,10 +241,18 @@ public class ExcelReadUtil {
             if (columnData.isEmpty()) {
                 errorMessages.add("在表头为'" + columnHeader + "'的列下没有数据");
             } else {
-                if (!checkColumnDataConsistency(columnData)) {
-                    errorMessages.add("表头为'" + columnHeader + "'的列下数据不一致");
+                if (filedList == null) {
+                    if (!checkColumnDataConsistency(columnData,null)) {
+                        errorMessages.add("表头为'" + columnHeader + "'的列下数据不一致");
+                    } else {
+                        headerType.add(detectDataType(columnData.get(0)));
+                    }
                 } else {
-                    headerType.add(detectDataType(columnData.get(0)));
+                    if (!checkColumnDataConsistency(columnData,checkType.get(i))) {
+                        errorMessages.add("表头为'" + columnHeader + "'的列下数据不一致");
+                    } else {
+                        headerType.add(detectDataType(columnData.get(0)));
+                    }
                 }
             }
         }
@@ -329,6 +356,8 @@ public class ExcelReadUtil {
         return sheetData;
     }
 
+
+
     /**
      * 获取指定列的数据
      *
@@ -349,22 +378,34 @@ public class ExcelReadUtil {
     }
 
 
+
     /**
      * 检验列数据格式是否一致
      *
      * @param columnData 列数据
+     * @param checkType 需要匹配的类型，为null默认为列第一行
      * @return boolean 是否一致
      **/
-    private static boolean checkColumnDataConsistency(List<String> columnData) {
+    private static boolean checkColumnDataConsistency(List<String> columnData, String checkType) {
+
         if (columnData.size() < 2) {
             return true;
         }
-        String firstValueType = detectDataType(columnData.get(0));
+
+//        检查是否有需要匹配的类型，没有默认为第一行
+        String firstValueType;
+        if (checkType == null) {
+            firstValueType =detectDataType(columnData.get(0));
+        }else {
+            firstValueType = checkType;
+        }
+//        遍历数据进行匹配
         for (int i = 1; i < columnData.size(); i++) {
             if (!firstValueType.equals(detectDataType(columnData.get(i)))) {
                 return false;
             }
         }
+
         return true;
     }
 
@@ -408,7 +449,7 @@ public class ExcelReadUtil {
      **/
     public static String detectDataType(String data) {
         if (data.matches("^-?\\d+$")) {
-            return "Integer";
+            return "Number";
         } else if (data.matches("^-?\\d+\\.\\d+$")) {
             return "Float";
         } else if (data.matches("^\\d{10,}$")) {

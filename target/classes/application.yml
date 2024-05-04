@@ -1,6 +1,6 @@
 server:
   port: 8368
-  max-http-header-size: 10240000000
+  max-http-header-size: 20480000
 
 spring:
   datasource:
@@ -13,8 +13,6 @@ spring:
       max-file-size: 1000MB
       max-request-size: 200MB
 mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     banner: false
     enable-sql-runner: true

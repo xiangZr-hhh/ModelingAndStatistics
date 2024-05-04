@@ -11,11 +11,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -69,6 +67,20 @@ public class authController {
         }
 
         return authService.authLogin(userLoginVO);
+    }
+
+
+
+    /**
+     *  用户退出登录
+     *
+     * @param request  请求
+     * @return com.modeling.utils.BaseResponse
+     * @author zrx
+     **/
+    @PostMapping("logout")
+    public BaseResponse authLogout(HttpServletRequest request) {
+        return authService.authLogout(request);
     }
 
 

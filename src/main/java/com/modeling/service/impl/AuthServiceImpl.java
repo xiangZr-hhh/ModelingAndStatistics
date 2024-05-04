@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 描述：
  *
@@ -58,6 +60,18 @@ public class AuthServiceImpl implements AuthService {
         return ResultUtil.success("用户注册成功");
     }
 
+
+    /**
+     * 用户退出成功
+     *
+     * @param request  请求
+     * @return com.modeling.utils.BaseResponse
+     * @author zrx
+     **/
+    @Override
+    public BaseResponse authLogout(HttpServletRequest request) {
+        return ResultUtil.success("退出成功");
+    }
 
 
     /**
