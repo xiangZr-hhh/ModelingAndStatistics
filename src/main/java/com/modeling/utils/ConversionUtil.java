@@ -18,11 +18,11 @@ public class ConversionUtil {
     public static String conversionRole(Integer role){
         switch (role) {
             case 1:
-                return "管理员";
+                return "admin";
             case 2:
-                return "普通用户";
+                return "editor";
             default:
-                return "未知用户";
+                return "other";
         }
     }
 

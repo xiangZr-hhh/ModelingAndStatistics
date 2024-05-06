@@ -37,6 +37,7 @@ public enum ErrorCode {
     ID_NOT_EXIST("IdNotExist", 40400, "ID不存在"),
     ROLE_NOT_FOUNDED("RoleNotFounded", 40401, "角色不存在"),
     ROLE_NAME_REPEAT("RoleNameRepeat", 40402, "角色名称重复"),
+    CAP_CREATE_ERROR("CapCreateError",40403,"验证码创建错误"),
     MESSAGE_ONLY_DELETE_BY_THEMSELVES("MessageOnlyDeleteByThenSelves", 40500, "用户只能删除自己的消息"),
     PERMISSION_NOT_EXIST("permissionNotExist", 40501, "权限不存在"),
     DATABASE_INSERT_ERROR("DatabaseInsertError", 50010, "数据库插入错误"),

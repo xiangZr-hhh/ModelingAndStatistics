@@ -2,6 +2,9 @@ package com.modeling.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.modeling.model.entity.User;
+import com.modeling.utils.BaseResponse;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -12,5 +15,6 @@ import com.modeling.model.entity.User;
  */
 public interface UserService extends IService<User> {
 
+    BaseResponse getUserByUsername(HttpServletRequest request);
 }
 
