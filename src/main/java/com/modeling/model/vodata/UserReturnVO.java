@@ -25,7 +25,7 @@ public class UserReturnVO {
     //权限
     private Integer role;
     //权限名称
-    private String roleName;
+    private List<String> roleName;
     //token
     private String token;
 

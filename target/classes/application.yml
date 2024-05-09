@@ -12,6 +12,11 @@ spring:
     multipart:
       max-file-size: 1000MB
       max-request-size: 200MB
+  redis:
+    host: localhost
+    port: 6379
+    password: Zrx@20041009
+    database: 10
 mybatis-plus:
   global-config:
     banner: false

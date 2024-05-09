@@ -68,9 +68,9 @@ public class JwtUtil {
 
 
     /**
+     *根据token获取用户id
      *
-     *
-     * @param token
+     * @param token token
      * @return java.lang.Long
      * @author zrx
      * @description 获取token中的用户id

@@ -2,6 +2,7 @@ package com.modeling.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.modeling.model.entity.Record;
+import com.modeling.utils.BaseResponse;
 
 
 /**
@@ -12,5 +13,8 @@ import com.modeling.model.entity.Record;
  */
 public interface RecordService extends IService<Record> {
 
+    BaseResponse getWeekActiveUserNumber();
+
+    BaseResponse getAllRecord();
 }
 

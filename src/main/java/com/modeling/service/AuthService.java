@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
  **/
 public interface AuthService {
 
-    BaseResponse authLogin(UserLoginVO userLoginVO);
+    BaseResponse authLogin(UserLoginVO userLoginVO, HttpServletRequest request);
 
     BaseResponse authRegister(UserRegisterVO userRegisterVO);
 

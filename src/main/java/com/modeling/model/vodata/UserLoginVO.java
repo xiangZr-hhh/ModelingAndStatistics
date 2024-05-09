@@ -18,6 +18,10 @@ public class UserLoginVO {
     private String username;
     @NotBlank(message = "密码不能为空")
     private String password;
+    @NotBlank(message = "验证码id不能为空")
+    private String captchaId;
+    @NotBlank(message = "验证码数据不能为空")
+    private String captchaCode;
 
 }
 

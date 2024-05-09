@@ -1,5 +1,8 @@
 package com.modeling.utils;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 描述：用于实体类封装时的数据转换
  *
@@ -15,14 +18,14 @@ public class ConversionUtil {
      * @return java.lang.String
      * @author zrx
      **/
-    public static String conversionRole(Integer role){
+    public static List<String> conversionRole(Integer role){
         switch (role) {
             case 1:
-                return "admin";
+                return Arrays.asList("admin","editor") ;
             case 2:
-                return "editor";
+                return Arrays.asList("editor");
             default:
-                return "other";
+                return Arrays.asList("other");
         }
     }
 
