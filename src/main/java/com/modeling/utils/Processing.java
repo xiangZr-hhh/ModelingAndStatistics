@@ -156,4 +156,43 @@ public class Processing {
         return charset.charAt(index);
     }
 
+    // 从数据中提取归属地信息
+    private String getPlaceFromData(String data) {
+        // 实现根据数据提取归属地的逻辑，这里只是示例
+        // 假设数据格式为 归属地:数据，例如："北京:123456"
+        String[] parts = data.split(":");
+        if (parts.length >= 2) {
+            return parts[0];
+        }
+        return null;
+    }
+
+
+    /**
+     * 按值排序map
+     *
+     * @param map
+     * @return void
+     * @author zrx
+     **/
+    public static Map<String, Integer> sortMapByValue(Map<String, Integer> map) {
+        // 将原始 Map 的条目转换为 List
+        List<Map.Entry<String, Integer>> entryList = new ArrayList<>(map.entrySet());
+
+        // 按值从大到小排序
+        Collections.sort(entryList, new Comparator<Map.Entry<String, Integer>>() {
+            @Override
+            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                return o2.getValue().compareTo(o1.getValue());
+            }
+        });
+
+        // 使用 LinkedHashMap 保存排序后的结果
+        Map<String, Integer> sortedMap = new LinkedHashMap<>();
+        for (Map.Entry<String, Integer> entry : entryList) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return sortedMap;
+    }
 }

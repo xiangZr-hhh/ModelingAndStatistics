@@ -184,7 +184,28 @@ public class DataTableController  {
    }
 
 
+   /**
+    * 获取系统统计数据
+    *
+    * @return com.modeling.utils.BaseResponse
+    * @author zrx
+    **/
+   @GetMapping("getSystemTotal")
+   public BaseResponse getAllDataTableNumber() {
+       return dataTableService.getSystemTotal();
+   }
 
+
+   /**
+    * 获取数据表信息
+    *
+    * @return com.modeling.utils.BaseResponse
+    * @author zrx
+    **/
+   @GetMapping("getAllDataTableSimpleInfo")
+    public BaseResponse getDataTableInfo() {
+       return dataTableService.getAllDataTableInfo();
+   }
 
 
 }

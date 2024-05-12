@@ -1,12 +1,11 @@
 package com.modeling.service.impl;
 
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.modeling.common.ExecuteActionTypeConstant;
-import com.modeling.dao.DataTableDAO;
-import com.modeling.dao.FiledDAO;
-import com.modeling.dao.FiledDataDAO;
-import com.modeling.dao.UserDAO;
+import com.modeling.dao.*;
 import com.modeling.mapper.*;
 import com.modeling.model.entity.*;
 import com.modeling.model.vodata.DataTableVO;
@@ -38,6 +37,7 @@ public class DataTableServiceImpl extends ServiceImpl<DataTableMapper, DataTable
     private final FiledDAO filedDAO;
     private final FiledDataDAO filedDataDAO;
     private final UserDAO userDAO;
+    private final RecordDAO recordDAO;
 
     private final DataTableMapper dataTableMapper;
     private final FiledMapper filedMapper;
@@ -123,6 +123,8 @@ public class DataTableServiceImpl extends ServiceImpl<DataTableMapper, DataTable
             newFiledList.add(sheetFiled);
         }
 
+//        定义插入了多少次数据
+        int insertNumberTotal = 0;
 //        临时储存Excel数据，用户批量插入
         List<FiledData> filedDataList = new ArrayList<>();
 //        根据列名添加数据
@@ -153,7 +155,8 @@ public class DataTableServiceImpl extends ServiceImpl<DataTableMapper, DataTable
                 filedDataList.add(filedData);
 
                 if (filedDataList.size() >= 1000){
-                    log.info("\t\t> 正在向Excel数据表【{}】插入了1000条数据,共计{}条",dataTable.getName(),(i+1)*(rnb+1) );
+                    insertNumberTotal += filedDataList.size();
+                    log.info("\t\t> 正在向Excel数据表【{}】插入了1000条数据,共计{}条",dataTable.getName(),insertNumberTotal );
                     filedDataMapper.insertBatchSomeColumn(filedDataList);
                     filedDataList.clear();
                 }
@@ -162,8 +165,9 @@ public class DataTableServiceImpl extends ServiceImpl<DataTableMapper, DataTable
         }
 
         if (!filedDataList.isEmpty()) {
+            insertNumberTotal += filedDataList.size();
             filedDataMapper.insertBatchSomeColumn(filedDataList);
-            log.info("\t\t> 正在向Excel数据表【{}】插入了{}条数据",dataTable.getName(),filedDataList.size());
+            log.info("\t\t> 正在向Excel数据表【{}】插入了{}条数据,共计{}条",dataTable.getName(),filedDataList.size(),insertNumberTotal);
         }
 
 //        添加记录
@@ -227,6 +231,8 @@ public class DataTableServiceImpl extends ServiceImpl<DataTableMapper, DataTable
                 (excelData.size()*filedList.size()));
         dataTableMapper.updateById(dataTable);
 
+//        定义插入了多少次数据
+        int insertNumberTotal = 0;
 //        临时储存Excel数据，用户批量插入
         List<FiledData> filedDataList = new ArrayList<>();
 //        根据列名添加数据
@@ -261,7 +267,8 @@ public class DataTableServiceImpl extends ServiceImpl<DataTableMapper, DataTable
                 filedDataList.add(filedData);
 
                 if (filedDataList.size() >= 1000){
-                    log.info("\t\t> 正在向Excel数据表【{}】插入了1000条数据,共计{}条",dataTable.getName(),(i+1)*(rnb+1) );
+                    insertNumberTotal += filedDataList.size();
+                    log.info("\t\t> 正在向Excel数据表【{}】插入了1000条数据,共计{}条",dataTable.getName(),insertNumberTotal );
                     filedDataMapper.insertBatchSomeColumn(filedDataList);
                     filedDataList.clear();
                 }
@@ -270,8 +277,9 @@ public class DataTableServiceImpl extends ServiceImpl<DataTableMapper, DataTable
         }
 
         if (!filedDataList.isEmpty()) {
+            insertNumberTotal += filedDataList.size();
             filedDataMapper.insertBatchSomeColumn(filedDataList);
-            log.info("\t\t> 正在向Excel数据表【{}】插入了{}条数据",dataTable.getName(),filedDataList.size());
+            log.info("\t\t> 正在向Excel数据表【{}】插入了{}条数据,共计{}条",dataTable.getName(),filedDataList.size(),insertNumberTotal);
         }
 
         Record record = new Record();
@@ -405,6 +413,69 @@ public class DataTableServiceImpl extends ServiceImpl<DataTableMapper, DataTable
         return ResultUtil.success("更新成功");
     }
 
+    /**
+     * 获取数据表数量
+     *
+     * @return com.modeling.utils.BaseResponse
+     * @author zrx
+     **/
+    @Override
+    public BaseResponse getAllDataTableNumber() {
+        Integer numbers = dataTableDAO.getAllDataTableNumber();
+        return ResultUtil.success(numbers);
+    }
+
+
+    /**
+     * 返回系统面板需要的数据（数据表数量，数据总量，总活跃用户，今日活跃用户）
+     *
+     * @return com.modeling.utils.BaseResponse
+     * @author zrx
+     **/
+    @Override
+    public BaseResponse getSystemTotal() {
+//        获取数据（数据表数量，数据总量，总活跃用户，今日活跃用户）
+        Integer dataTableNumber = dataTableDAO.getAllDataTableNumber();
+        Integer excelData = dataTableDAO.getExcelDataTotal();
+        Integer allActiveUser = recordDAO.getAllActiveUser();
+        Integer todayActiveUser = recordDAO.getTodayActiveUser();
+//        封装结果类
+        Map<String,Integer> result = new HashMap<>();
+        result.put("dataTableNumber",dataTableNumber);
+        result.put("excelData",excelData);
+        result.put("allActiveUser", allActiveUser);
+        result.put("todayActiveUser", todayActiveUser);
+
+        return ResultUtil.success(result);
+    }
+
+    @Override
+    public BaseResponse getAllDataTableInfo() {
+//      定义json结果类
+        JSONArray dataTableInfo = new JSONArray();
+//        获取所有数据表
+        List<DataTable> dataTables = dataTableMapper.selectList(null);
+//        遍历，获取数据表数据和列数据
+        for (DataTable dataTable: dataTables) {
+            JSONObject tableJson =new JSONObject();
+            tableJson.put("label",dataTable.getName());
+            tableJson.put("value",dataTable.getId());
+//            遍历数据表的列数据
+            List<Filed> filedList = filedDAO.getFiledListByTableId(dataTable.getId());
+            JSONArray filedInfo = new JSONArray();
+            for (Filed filed: filedList) {
+                JSONObject filedJson = new JSONObject();
+                filedJson.put("label",filed.getName());
+                filedJson.put("value",filed.getId());
+                filedInfo.add(filedJson);
+            }
+            tableJson.put("children",filedInfo);
+            dataTableInfo.add(tableJson);
+        }
+
+        return ResultUtil.success(dataTableInfo);
+    }
+
 
     /**
      * 根据数据表id获取数据表内的所有数据
@@ -505,6 +576,7 @@ public class DataTableServiceImpl extends ServiceImpl<DataTableMapper, DataTable
         DataTableVO dataTableVO = new DataTableVO();
         Processing.copyProperties(dataTable,dataTableVO);
         dataTableVO.setFileds(filedDataVOS);
+        dataTableVO.setCreatedName(userDAO.getUserNameById(dataTable.getCreatedBy()));
 
 
 //        增加记录

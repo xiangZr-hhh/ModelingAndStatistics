@@ -41,6 +41,7 @@ public class FiledDataDAO {
     public List<String> getFiledDataByFiledId (Long filedId) {
 
         filedDataWrapper.clear();
+        filedDataWrapper.select(FiledData::getData);
         filedDataWrapper.eq(FiledData::getFiledId,filedId);
 
         List<FiledData> fileData = filedDataMapper.selectList(filedDataWrapper);

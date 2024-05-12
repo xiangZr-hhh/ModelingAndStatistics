@@ -104,10 +104,10 @@ public class RecordDAO {
         for (Record record:records) {
             StringBuilder recordInfo = new StringBuilder();
             recordInfo.append(format.format(record.getCreatedTime()))
-                    .append("")
+                    .append("   ")
                     .append(record.getContent())
-                    .append("——ip地址为:")
-                    .append(record.getIp());
+                    .append("(ip地址为:")
+                    .append(record.getIp()+")");
             allRecordInfo.add(recordInfo.toString());
         }
 
@@ -115,7 +115,46 @@ public class RecordDAO {
     }
 
 
-    public 
+    /**
+     * 获取总使用人数
+     *
+     * @return java.lang.Integer
+     * @author zrx
+     **/
+    public Integer getAllActiveUser () {
+//        获取所有用户
+        List<Record> records = recordMapper.selectList(null);
+//        根据ip查重，去除本地ip，获取真实使用用户
+        records = records.stream()
+                .filter(record -> !record.getIp().equals("0:0:0:0:0:0:0:1"))
+                .distinct()
+                .collect(Collectors.toList());
+
+        return records.size();
+    }
+
+
+    /**
+     * 获取今日活跃用户
+     *
+     * @return java.lang.Integer
+     * @author zrx
+     **/
+    public Integer getTodayActiveUser() {
+//      获取今天的日期
+        LocalDate today = LocalDate.now();
+//        获取所有用户
+        List<Record> records = recordMapper.selectList(null);
+//        根据ip查重，去除本地ip，获取真实使用用户
+        records = records.stream()
+                .filter(record -> !record.getIp().equals("0:0:0:0:0:0:0:1"))
+                .filter(record -> record.getCreatedTime().toInstant()
+                        .atZone(ZoneId.systemDefault()).toLocalDate().equals(today))
+                .distinct()
+                .collect(Collectors.toList());
+
+        return records.size();
+    }
 
 }
 

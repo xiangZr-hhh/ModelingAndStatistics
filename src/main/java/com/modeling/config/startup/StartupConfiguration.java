@@ -1,8 +1,11 @@
 package com.modeling.config.startup;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.modeling.common.PlaceJsonConstants;
 import com.modeling.common.SafeConstants;
+import com.modeling.mapper.ConfigMapper;
 import com.modeling.model.entity.Config;
 import com.modeling.model.vodata.InfoAboutSecurityKey;
 import com.modeling.utils.Processing;
@@ -19,6 +22,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * 系统启动时进行的一些初始化操作
@@ -37,6 +41,8 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 public class StartupConfiguration {
     private final JdbcTemplate jdbcTemplate;
+
+    private final ConfigMapper configMapper;
 
 
     /**
@@ -84,4 +90,41 @@ public class StartupConfiguration {
     }
 
 
+
+    /**
+     * 准备地理信息json数据
+     * <hr/>
+     */
+    @Bean
+    @Order(2)
+    public CommandLineRunner preparePlaceJson() {
+        return args -> {
+            log.info("[Preparation] 系统进行地理信息准备");
+            Gson gson = new Gson();
+            // 获取数据库中的安全密钥
+            String getPlaceJson = jdbcTemplate.queryForObject(
+                    "SELECT data FROM modeling.config WHERE name = 'place_json' LIMIT 1",
+                    String.class);
+            if (getPlaceJson == null || getPlaceJson.equals(""))  {
+                // 生成地理信息json
+                String json = gson.toJson(PlaceJsonConstants.PLACE_JSON);
+                LambdaQueryWrapper<Config> configLambdaQueryWrapper = new LambdaQueryWrapper<>();
+                configLambdaQueryWrapper.eq(Config::getName,"place_json");
+                List<Config> configs = configMapper.selectList(configLambdaQueryWrapper);
+                if (configs.size() == 0){
+                    Config config = new Config();
+                    config.setName("place_json")
+                            .setData(json);
+                    configMapper.insert(config);
+                }
+                if (configs.size() == 1){
+                    Config config = configs.get(0);
+                    config.setData(json);
+                    configMapper.updateById(config);
+                }
+
+            }
+        };
+
+    }
 }

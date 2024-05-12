@@ -31,6 +31,8 @@ public class DataTableVO {
 
     private Long createdBy;
 
+    private String createdName;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdTime;
 }

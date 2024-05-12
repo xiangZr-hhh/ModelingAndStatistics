@@ -33,5 +33,12 @@ public interface DataTableService extends IService<DataTable> {
     BaseResponse increaseDataTable(MultipartFile[] files, Long id, HttpServletRequest request);
 
     BaseResponse updataDataTable(Long id,MultipartFile[] files, HttpServletRequest request);
+
+    BaseResponse getAllDataTableNumber();
+
+    BaseResponse getSystemTotal();
+
+
+    BaseResponse getAllDataTableInfo();
 }
 

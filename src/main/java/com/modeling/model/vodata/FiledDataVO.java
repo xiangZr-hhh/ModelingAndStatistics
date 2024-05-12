@@ -24,6 +24,8 @@ public class FiledDataVO {
     //所属数据表id
     private Long tableId;
 
+    private Integer filedDataSize;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdTime;
 

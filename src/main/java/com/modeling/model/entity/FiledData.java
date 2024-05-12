@@ -24,8 +24,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @TableName("filed_data")
 public class FiledData  {
-    @TableId(type= IdType.AUTO)
-    private Integer id;
     
     private String data;
     
