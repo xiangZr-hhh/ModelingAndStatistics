@@ -1,5 +1,7 @@
 package com.modeling.utils;
 
+import com.modeling.model.entity.UpdatedLog;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +28,19 @@ public class ConversionUtil {
                 return Arrays.asList("editor");
             default:
                 return Arrays.asList("other");
+        }
+    }
+
+    public static String conversionUpdatedLogColor(UpdatedLog updatedLog){
+        switch (updatedLog.getType()) {
+            case "feat":
+                return "#0bbd87";
+            case "fix":
+                return "#E6A23C";
+            case "patch":
+                return "#909399";
+            default:
+                return "";
         }
     }
 

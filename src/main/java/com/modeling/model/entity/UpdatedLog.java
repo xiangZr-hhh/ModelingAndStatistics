@@ -1,21 +1,21 @@
 package com.modeling.model.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.experimental.Accessors;
+
+import java.util.Date;
 
 /**
  * (UpdatedLog)表实体类
  *
  * @author zrx
- * @since 2024-05-12 17:32:00
+ * @since 2024-05-12 18:44:44
  */
 @SuppressWarnings("serial")
 @Data
@@ -23,15 +23,18 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("updated_log")
-public class UpdatedLog  {
+public class UpdatedLog {
     @TableId(type= IdType.AUTO)
     private Long id;
-    
-    private Long createdBy;
-    
-    private Date createdTime;
     //内容
     private String content;
+    //模块名称
+    private String moduleName;
+    
+    private Long createdBy;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createdTime;
     //类型
     private String type;
     //版本

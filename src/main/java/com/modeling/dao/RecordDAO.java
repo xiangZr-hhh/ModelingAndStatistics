@@ -2,9 +2,14 @@ package com.modeling.dao;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.modeling.mapper.RecordMapper;
+import com.modeling.mapper.UpdatedLogMapper;
 import com.modeling.mapper.UserMapper;
 import com.modeling.model.entity.Record;
+import com.modeling.model.entity.UpdatedLog;
 import com.modeling.model.entity.User;
+import com.modeling.model.vodata.UpdatedLogReturnVO;
+import com.modeling.utils.ConversionUtil;
+import com.modeling.utils.Processing;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -29,7 +34,9 @@ import java.util.stream.Collectors;
 public class RecordDAO {
 
     private final UserDAO userDAO;
+    
     private final RecordMapper recordMapper;
+    private final UpdatedLogMapper updatedLogMapper;
 
     private final LambdaQueryWrapper<Record> recordLambdaQueryWrapper = new LambdaQueryWrapper<>();
 
@@ -154,6 +161,29 @@ public class RecordDAO {
                 .collect(Collectors.toList());
 
         return records.size();
+    }
+
+    /**
+     * 获取更新日志VO类
+     *
+     * @return java.util.List<com.modeling.model.vodata.UpdatedLogReturnVO>
+     * @author zrx
+     **/
+    public List<UpdatedLogReturnVO> getAllUpdateLogReturnVO () {
+//        获取所有更新日志数据
+        List<UpdatedLog> allUpdatedLog = updatedLogMapper.selectList(null);
+//        定义储存更新日志数据
+        List<UpdatedLogReturnVO> logVO = new ArrayList<>();
+//        遍历，封装VO类
+        for(UpdatedLog updatedLog: allUpdatedLog) {
+            UpdatedLogReturnVO updatedLogReturnVO = new UpdatedLogReturnVO();
+            Processing.copyProperties(updatedLog,updatedLogReturnVO);
+            updatedLogReturnVO.setTimestamp(updatedLog.getCreatedTime().toString());
+            updatedLogReturnVO.setColor(ConversionUtil.conversionUpdatedLogColor(updatedLog));
+            logVO.add(updatedLogReturnVO);
+        }
+
+        return logVO;
     }
 
 }

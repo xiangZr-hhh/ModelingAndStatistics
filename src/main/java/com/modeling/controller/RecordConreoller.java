@@ -78,6 +78,12 @@ public class RecordConreoller {
         return updatedLogService.addUpdatedLog(updatedLogAddVO,request);
     }
 
+
+    @GetMapping("getAllUpdatedLog")
+    public BaseResponse getUpdateLog(HttpServletRequest request) {
+        return updatedLogService.getAllUpdatedLog(request);
+    }
+
 }
 
 

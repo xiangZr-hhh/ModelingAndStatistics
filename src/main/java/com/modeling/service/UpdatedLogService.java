@@ -19,5 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 public interface UpdatedLogService extends IService<UpdatedLog> {
 
 	BaseResponse addUpdatedLog(UpdatedLogAddVO updatedLogAddVO, HttpServletRequest request);
+
+	BaseResponse getAllUpdatedLog(HttpServletRequest request);
 }
 

@@ -23,6 +23,9 @@ public class UpdatedLogAddVO {
 	//版本
 	@NotBlank(message = "版本不能为空")
 	private String version;
+	//模块名
+	@NotBlank(message = "模块名不能为空")
+	private String moduleName;
 
 }
 
